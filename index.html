@@ -148,7 +148,7 @@ p{line-height:1.6;font-size:1rem;}
   <!-- SCENE 4 -->
   <div class="scene" id="s4">
     <h1>WILL YOU BE MY VALENTINE?????</h1>
-    <button class="btn" id="scene4YesBtn">Yes 💕</button>
+    <button class="btn" onclick="go(4)">Yes 💕</button>
     <button class="btn alt" id="scene4NoBtn">No 😢</button>
     <p id="noQuestion" style="margin-top:15px;font-size:16px;"></p>
   </div>
@@ -233,9 +233,7 @@ scene4NoBtn.addEventListener("click",()=>{
 });
 
 /* Scene 4 Yes button goes to Scene 5 */
-scene4YesBtn.addEventListener("click", ()=>{
-  go(5);
-  explode();
+function yesFinal(){ go(5); explode(); }
 });
 
 /* Music logic */
