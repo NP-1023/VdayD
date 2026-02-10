@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Will You Be My Valentine? 💝</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+--pink1:#ff758c;
+--pink2:#ff7eb3;
+--card:#ffffffee;
+--dark:#2f2f2f;
+}
+
+*{box-sizing:border-box;font-family:'Poppins',system-ui}
+
+body{
+margin:0;
+height:100vh;
+overflow:hidden;
+background:linear-gradient(135deg,var(--pink1),var(--pink2));
+display:flex;
+align-items:center;
+justify-content:center;
+color:var(--dark);
+}
+
+/* Card */
+.app{
+width:92%;
+max-width:440px;
+background:var(--card);
+border-radius:26px;
+padding:30px;
+box-shadow:0 25px 65px rgba(0,0,0,.35);
+text-align:center;
+z-index:2;
+}
+
+/* Scenes */
+.scene{display:none;animation:fade .6s ease}
+.scene.active{display:block}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(25px)}
+to{opacity:1;transform:none}
+}
+
+h1{margin-top:0}
+p{line-height:1.6}
+
+/* Buttons */
+.btn{
+background:#ff4f7b;
+color:#fff;
+border:none;
+padding:14px 30px;
+border-radius:40px;
+font-size:16px;
+cursor:pointer;
+margin:10px 6px;
+transition:.25s;
+}
+
+.btn:hover{transform:scale(1.07)}
+.btn.alt{background:#eee;color:#555}
+
+/* Love bar */
+.bar{
+width:100%;
+height:14px;
+background:#eee;
+border-radius:10px;
+overflow:hidden;
+margin:18px 0;
+}
+.bar span{
+display:block;
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#ff4f7b,#ff9aa2);
+transition:width .6s ease;
+}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+font-size:22px;
+animation:float 12s linear infinite;
+opacity:.75;
+}
+@keyframes float{
+from{transform:translateY(110vh)}
+to{transform:translateY(-10vh)}
+}
+
+/* Finale */
+.final{
+animation:pulse .6s infinite alternate;
+}
+@keyframes pulse{
+from{transform:scale(1)}
+to{transform:scale(1.05)}
+}
+
+.final img{
+width:100%;
+max-width:260px;
+border-radius:18px;
+margin:12px 0;
+}
+
+/* Music button */
+.music-controls{
+margin-top:20px;
+}
+.music-btn{
+width:100%;
+}
+
+/* Hide overflow hearts */
+body::after{content:"";display:block;clear:both}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SCENE 1 -->
+<div class="scene active" id="s1">
+<h1 id="type"></h1>
+<button class="btn" onclick="go(2)">Yes 💕</button>
+<button class="btn alt" onclick="wrong()">No</button>
+</div>
+
+<!-- SCENE 2 -->
+<div class="scene" id="s2">
+<h1>How deep is your love, Dhara? 💖</h1>
+<p>Measured with 100% accuracy 😌</p>
+<div class="bar"><span id="bar"></span></div>
+<p><strong id="percent">0%</strong></p>
+<button class="btn" onclick="grow()">Increase Love ❤️</button>
+</div>
+
+<!-- SCENE 3 -->
+<div class="scene" id="s3">
+<h1>One last question…</h1>
+<p>Choose wisely 👀</p>
+<button class="btn" onclick="yesFinal()">Yes, always 💝</button>
+<button class="btn alt" id="noBtn">No</button>
+</div>
+
+<!-- SCENE 4 FINAL -->
+<div class="scene" id="s4">
+<div class="final">
+<h1>YAYYY 💕</h1>
+<p>
+Dhara, you just made my heart melt ❤️<br>
+This Valentine’s Day is officially ours.
+</p>
+
+<img src="https://media.tenor.com/8sGkK5sQ7R8AAAAC/bubu-dudu-hug.gif" alt="Bubu Dudu Hug">
+<img src="https://media.tenor.com/Y4Z4z5qX6XkAAAAC/bubu-dudu-kiss.gif" alt="Bubu Dudu Kiss">
+
+<div style="font-size:26px">🎁💖🤗💋❤️💕</div>
+</div>
+</div>
+
+<!-- MUSIC PLAYER -->
+<div id="musicControls" class="music-controls">
+<button id="musicToggle" class="btn alt music-btn">🎵 Play Music</button>
+<audio id="bgMusic" loop>
+<source src="song.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+</div>
+
+</div>
+
+<script>
+/* Typing effect */
+const text="Do you like me, Dhara? 💕";
+let i=0;
+const el=document.getElementById("type");
+(function type(){
+if(i<text.length){
+el.innerHTML+=text[i++];
+setTimeout(type,60);
+}
+})();
+
+/* Navigation */
+function go(n){
+document.querySelector('.scene.active').classList.remove('active');
+document.getElementById('s'+n).classList.add('active');
+}
+
+/* Wrong answer */
+function wrong(){
+alert("That option doesn’t exist 😌");
+}
+
+/* Love meter */
+let love=0;
+function grow(){
+love+=Math.floor(Math.random()*25)+15;
+if(love>100)love=100;
+bar.style.width=love+"%";
+percent.innerText=love+"%";
+if(love===100)setTimeout(()=>go(3),700);
+}
+
+/* No button escape */
+const no=document.getElementById("noBtn");
+no.addEventListener("mouseenter",()=>{
+no.style.position="absolute";
+no.style.left=Math.random()*70+"%";
+no.style.top=Math.random()*70+"%";
+});
+
+/* Final yes */
+function yesFinal(){
+go(4);
+explode();
+autoPlayMusic();
+}
+
+/* Heart explosion */
+function explode(){
+for(let i=0;i<45;i++){
+let h=document.createElement("div");
+h.innerText="💖";
+h.className="heart";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),3000);
+}
+}
+
+/* Floating hearts background */
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerText=Math.random()>0.5?"❤️":"💖";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),12000);
+},500);
+
+/* MUSIC LOGIC */
+const musicBtn=document.getElementById("musicToggle");
+const bgMusic=document.getElementById("bgMusic");
+let playing=false;
+
+musicBtn.addEventListener("click",()=>{
+if(!playing){
+bgMusic.volume=0;
+bgMusic.play();
+let v=0;
+const fade=setInterval(()=>{
+v+=0.05;
+bgMusic.volume=v;
+if(v>=0.5)clearInterval(fade);
+},100);
+musicBtn.textContent="🔇 Stop Music";
+}else{
+bgMusic.pause();
+musicBtn.textContent="🎵 Play Music";
+}
+playing=!playing;
+});
+
+/* Auto-play on finale */
+function autoPlayMusic(){
+if(!playing){
+bgMusic.volume=0.5;
+bgMusic.play();
+musicBtn.textContent="🔇 Stop Music";
+playing=true;
+}
+}
+</script>
+
+</body>
+</html>
