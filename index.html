@@ -137,7 +137,7 @@ body::after{content:"";display:block;clear:both}
 
 <!-- SCENE 2 -->
 <div class="scene" id="s2">
-<h1>How deep is your love, Dhara? 💖</h1>
+<h1>How Much Do You Love Me? 💖</h1>
 <p>Measured with 100% accuracy 😌</p>
 <div class="bar"><span id="bar"></span></div>
 <p><strong id="percent">0%</strong></p>
@@ -152,21 +152,63 @@ body::after{content:"";display:block;clear:both}
 <button class="btn alt" id="noBtn">No</button>
 </div>
 
-<!-- SCENE 4 FINAL -->
+<!-- SCENE 4 -->
 <div class="scene" id="s4">
+<h1>WILL YOU BE MY VALENTINE?????</h1>
+  
+export default function Page() {
+  const [noCount, setNoCount] = useState(0);
+  const [yesPressed, setYesPressed] = useState(false);
+  const yesButtonSize = noCount * 20 + 16;
+
+  const handleNoClick = () => {
+    setNoCount(noCount + 1);
+  };
+
+  const getNoButtonText = () => {
+    const phrases = [
+      "No",
+      "Are you sure?",
+      "Really sure?",
+      "Think again!",
+      "Last chance!",
+      "Surely not?",
+      "You might regret this!",
+      "Give it another thought!",
+      "Are you absolutely certain?",
+      "This could be a mistake!",
+      "Have a heart!",
+      "Don't be so cold!",
+      "Change of heart?",
+      "Wouldn't you reconsider?",
+      "Is that your final answer?",
+      "You're breaking my heart ;(",
+      "Is that your final answer?",
+      "You're breaking my heart ;(",
+      "Plsss? :( You're breaking my heart",
+    ];
+  
+<!-- SCENE 5 FINAL -->
+<div class="scene" id="s5">
 <div class="final">
 <h1>YAYYY 💕</h1>
 <p>
-Dhara, HEHEHEHE I got the hottest Valetine's ❤️<br>
-Sucks to be other losers who cant have You.
-
-  <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" />
+HEHEHEHE I got the hottest Valetine's ❤️<br>
+Sucks to be other losers who cant have You
+ <div className="overflow-hidden flex flex-col items-center justify-center pt-4 h-screen -mt-16 selection:bg-rose-600 selection:text-white text-zinc-900">
+      {yesPressed ? (
+        <>
+          <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" />
           <div className="text-4xl md:text-6xl font-bold my-4">
-            
-  
-</p>
-<img src="https://media.tenor.com/8sGkK5sQ7R8AAAAC/bubu-dudu-hug.gif" alt="Bubu Dudu Hug">
-<img src="https://media.tenor.com/Y4Z4z5qX6XkAAAAC/bubu-dudu-kiss.gif" alt="Bubu Dudu Kiss">
+            Ok Yayyyyy!!!
+          </div>
+        </>
+      ) : (
+        <>
+          <img
+            src={lovesvg}
+            className="fixed animate-pulse top-10 md:left-24 left-6 md:w-40 w-28"
+          /
 
 <div style="font-size:26px">🎁💖🤗💋❤️💕</div>
 </div>
@@ -289,7 +331,7 @@ musicBtn.textContent="🎵 Play Music";
 playing=!playing;
 });
 
-/* Auto-play on finale */
+/* Auto-play on S1 */
 function autoPlayMusic(){
 if(!playing){
 bgMusic.volume=0.5;
