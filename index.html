@@ -25,7 +25,6 @@ body{
   padding:10px;
 }
 
-/* Card */
 .app{
   width:100%;
   max-width:440px;
@@ -38,10 +37,8 @@ body{
   z-index:2;
 }
 
-/* Scenes */
 .scene{display:none;animation:fade .6s ease}
 .scene.active{display:block}
-
 @keyframes fade{
   from{opacity:0;transform:translateY(25px)}
   to{opacity:1;transform:none}
@@ -50,7 +47,6 @@ body{
 h1{margin-top:0;font-size:1.6rem;}
 p{line-height:1.6;font-size:1rem;}
 
-/* Buttons */
 .btn{
   background:#ff4f7b;
   color:#fff;
@@ -67,7 +63,6 @@ p{line-height:1.6;font-size:1rem;}
 .btn:hover{transform:scale(1.07)}
 .btn.alt{background:#eee;color:#555}
 
-/* Love bar */
 .bar{
   width:100%;
   height:14px;
@@ -84,7 +79,6 @@ p{line-height:1.6;font-size:1rem;}
   transition:width .6s ease;
 }
 
-/* Floating hearts */
 .heart{
   position:absolute;
   font-size:18px;
@@ -96,7 +90,6 @@ p{line-height:1.6;font-size:1rem;}
   to{transform:translateY(-10vh)}
 }
 
-/* Finale */
 .final{
   animation:pulse .6s infinite alternate;
 }
@@ -108,7 +101,6 @@ p{line-height:1.6;font-size:1rem;}
   height:auto;
 }
 
-/* Music button */
 .music-controls{
   margin-top:15px;
 }
@@ -117,7 +109,6 @@ p{line-height:1.6;font-size:1rem;}
   font-size:1rem;
 }
 
-/* Responsive text and buttons */
 @media (max-width:480px){
   h1{font-size:1.3rem;}
   p{font-size:0.95rem;}
@@ -178,6 +169,7 @@ p{line-height:1.6;font-size:1rem;}
       Your browser does not support the audio element.
     </audio>
   </div>
+
 </div>
 
 <script>
@@ -185,12 +177,7 @@ p{line-height:1.6;font-size:1rem;}
 const text="Do you like me, Dhara? 💕";
 let i=0;
 const el=document.getElementById("type");
-(function type(){
-  if(i<text.length){
-    el.innerHTML+=text[i++];
-    setTimeout(type,60);
-  }
-})();
+(function type(){ if(i<text.length){ el.innerHTML+=text[i++]; setTimeout(type,60); }})();
 
 /* Scene navigation */
 function go(n){
@@ -205,13 +192,7 @@ function wrong(){ alert("That option doesn’t exist 😌"); }
 let love=0;
 const bar=document.getElementById("bar");
 const percent=document.getElementById("percent");
-function grow(){
-  love+=Math.floor(Math.random()*25)+15;
-  if(love>100) love=100;
-  bar.style.width=love+"%";
-  percent.innerText=love+"%";
-  if(love===100) setTimeout(()=>go(3),700);
-}
+function grow(){ love+=Math.floor(Math.random()*25)+15; if(love>100) love=100; bar.style.width=love+"%"; percent.innerText=love+"%"; if(love===100) setTimeout(()=>go(3),700); }
 
 /* Scene 3 No button escape */
 const noBtn=document.getElementById("noBtn");
@@ -228,7 +209,7 @@ const scene4YesBtn = document.getElementById("scene4YesBtn");
 const noQuestion = document.getElementById("noQuestion");
 const phrases = [
   "No","Are you sure?","Really sure?","Think again?","Last chance!",
-  "Surely not?","You might regret this!","Give it another thought!",
+  "Surely not?","You might regret this!","Give it another thought?",
   "Are you absolutely certain?","This could be a mistake!","Have a heart!",
   "Don't be so cold!","Change of heart?","Wouldn't you reconsider?",
   "Is that your final answer?","You're breaking my heart ;(","Plsss? :( You're breaking my heart"
@@ -236,17 +217,19 @@ const phrases = [
 
 scene4NoBtn.addEventListener("click",()=>{
   noCount++;
-  // Change text
   const phrase = phrases[Math.min(noCount, phrases.length-1)];
   noQuestion.textContent = phrase;
-
-  // Grow Yes button width and height for mobile
+  // Grow Yes button width, height, font
   const style = window.getComputedStyle(scene4YesBtn);
-  const currentWidth = parseFloat(style.width);
-  const currentHeight = parseFloat(style.height);
-  scene4YesBtn.style.width = (currentWidth + 20) + "px";
-  scene4YesBtn.style.height = (currentHeight + 10) + "px";
-  scene4YesBtn.style.fontSize = (parseFloat(style.fontSize)+2) + "px";
+  scene4YesBtn.style.width = (parseFloat(style.width)+20)+"px";
+  scene4YesBtn.style.height = (parseFloat(style.height)+10)+"px";
+  scene4YesBtn.style.fontSize = (parseFloat(style.fontSize)+2)+"px";
+});
+
+/* Scene 4 Yes button goes to Scene 5 */
+scene4YesBtn.addEventListener("click", ()=>{
+  go(5);
+  explode();
 });
 
 /* Music logic */
@@ -254,28 +237,29 @@ const musicBtn=document.getElementById("musicToggle");
 const bgMusic=document.getElementById("bgMusic");
 let playing=false;
 
-function autoPlayMusic(){
+function startMusic(){
   if(!playing){
     bgMusic.volume = 0;
-    bgMusic.play().catch(()=>{}); // prevent error
-    let v = 0;
+    bgMusic.play().catch(()=>{}); // autoplay may fail
+    let v=0;
     const fade = setInterval(()=>{
       v += 0.05;
-      bgMusic.volume = Math.min(v, 0.5);
-      if(v >= 0.5) clearInterval(fade);
+      bgMusic.volume = Math.min(v,0.5);
+      if(v>=0.5) clearInterval(fade);
     },100);
     musicBtn.textContent = "🔇 Stop Music";
     playing = true;
   }
 }
 
+/* Toggle music */
 musicBtn.addEventListener("click",()=>{
-  if(!playing){ bgMusic.play(); musicBtn.textContent = "🔇 Stop Music"; }
-  else { bgMusic.pause(); musicBtn.textContent = "🎵 Play Music"; }
+  if(!playing){ bgMusic.play(); musicBtn.textContent="🔇 Stop Music"; }
+  else { bgMusic.pause(); musicBtn.textContent="🎵 Play Music"; }
   playing = !playing;
 });
 
-/* Final yes */
+/* Final yes from scene 3 */
 function yesFinal(){ go(4); explode(); }
 
 /* Heart explosion */
@@ -300,12 +284,10 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),12000);
 },500);
 
-/* Auto-play music attempt at load */
-window.addEventListener("load", autoPlayMusic);
+/* Start music on first user interaction (guaranteed) */
+document.body.addEventListener("click",{once:true}, startMusic);
+document.body.addEventListener("touchstart",{once:true}, startMusic);
 </script>
 
 </body>
 </html>
-
-
-
