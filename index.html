@@ -148,7 +148,7 @@ body::after{content:"";display:block;clear:both}
   <!-- SCENE 4 -->
   <div class="scene" id="s4">
     <h1>WILL YOU BE MY VALENTINE?????</h1>
-    <button class="btn" onclick="go(5)">Yes 💕</button>
+    <button class="btn" id="scene4YesBtn">Yes 💕</button>
     <button class="btn alt" id="scene4NoBtn">No 😢</button>
     <p id="noQuestion" style="margin-top:15px;font-size:18px;"></p>
   </div>
@@ -214,9 +214,10 @@ noBtn.addEventListener("mouseenter",()=>{
   noBtn.style.top=Math.random()*70+"%";
 });
 
-/* Scene 4 No button logic */
+/* Scene 4 No button logic with growing Yes button */
 let noCount = 0;
 const scene4NoBtn = document.getElementById("scene4NoBtn");
+const scene4YesBtn = document.getElementById("scene4YesBtn");
 const noQuestion = document.getElementById("noQuestion");
 const phrases = [
   "No",
@@ -240,8 +241,12 @@ const phrases = [
 
 scene4NoBtn.addEventListener("click",()=>{
   noCount++;
+  // Change the text
   const phrase = phrases[Math.min(noCount, phrases.length-1)];
   noQuestion.textContent = phrase;
+  // Grow the Yes button
+  const currentFontSize = parseFloat(window.getComputedStyle(scene4YesBtn).fontSize);
+  scene4YesBtn.style.fontSize = (currentFontSize + 5) + "px";
 });
 
 /* Music logic */
@@ -299,9 +304,10 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),12000);
 },500);
 
-/* Auto-play music on load */
+/* Auto-play music at Scene 1 load */
 window.addEventListener("load", autoPlayMusic);
 </script>
 
 </body>
 </html>
+
