@@ -244,9 +244,12 @@ scene4NoBtn.addEventListener("click",()=>{
   // Change the text
   const phrase = phrases[Math.min(noCount, phrases.length-1)];
   noQuestion.textContent = phrase;
-  // Grow the Yes button
-  const currentFontSize = parseFloat(window.getComputedStyle(scene4YesBtn).fontSize);
-  scene4YesBtn.style.fontSize = (currentFontSize + 5) + "px";
+  // Grow the Yes button width and height
+  const style = window.getComputedStyle(scene4YesBtn);
+  const currentWidth = parseFloat(style.width);
+  const currentHeight = parseFloat(style.height);
+  scene4YesBtn.style.width = (currentWidth + 20) + "px";
+  scene4YesBtn.style.height = (currentHeight + 10) + "px";
 });
 
 /* Music logic */
@@ -256,8 +259,15 @@ let playing=false;
 
 function autoPlayMusic(){
   if(!playing){
-    bgMusic.volume = 0.5;
-    bgMusic.play();
+    bgMusic.volume = 0;
+    bgMusic.play().catch(()=>{}); // prevent autoplay error
+    // fade in
+    let v = 0;
+    const fade = setInterval(()=>{
+      v += 0.05;
+      bgMusic.volume = Math.min(v, 0.5);
+      if(v >= 0.5) clearInterval(fade);
+    },100);
     musicBtn.textContent = "🔇 Stop Music";
     playing = true;
   }
@@ -279,7 +289,6 @@ musicBtn.addEventListener("click",()=>{
 function yesFinal(){
   go(4);
   explode();
-  autoPlayMusic();
 }
 
 /* Heart explosion */
@@ -304,10 +313,11 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),12000);
 },500);
 
-/* Auto-play music at Scene 1 load */
+/* Auto-play music attempt at load */
 window.addEventListener("load", autoPlayMusic);
 </script>
 
 </body>
 </html>
+
 
