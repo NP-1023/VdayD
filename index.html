@@ -141,7 +141,7 @@ p{line-height:1.6;font-size:1rem;}
   <div class="scene" id="s3">
     <h1>One last question…</h1>
     <p>Choose wisely 👀</p>
-    <button class="btn" onclick="yesFinal()">Yes, always 💝</button>
+    <button class="btn" onclick="go(4)">Yes, always 💝</button>
     <button class="btn alt" id="noBtn">No</button>
   </div>
 
@@ -163,7 +163,7 @@ p{line-height:1.6;font-size:1rem;}
 
   <!-- MUSIC PLAYER -->
   <div id="musicControls" class="music-controls">
-    <button id="musicToggle" class="btn alt music-btn">🔇 Stop Music</button>
+    <button id="musicToggle" class="btn alt music-btn">🎵 Play Music</button>
     <audio id="bgMusic" loop>
       <source src="song.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
@@ -192,7 +192,13 @@ function wrong(){ alert("That option doesn’t exist 😌"); }
 let love=0;
 const bar=document.getElementById("bar");
 const percent=document.getElementById("percent");
-function grow(){ love+=Math.floor(Math.random()*25)+15; if(love>100) love=100; bar.style.width=love+"%"; percent.innerText=love+"%"; if(love===100) setTimeout(()=>go(3),700); }
+function grow(){ 
+  love+=Math.floor(Math.random()*25)+15; 
+  if(love>100) love=100; 
+  bar.style.width=love+"%"; 
+  percent.innerText=love+"%"; 
+  if(love===100) setTimeout(()=>go(3),700); 
+}
 
 /* Scene 3 No button escape */
 const noBtn=document.getElementById("noBtn");
@@ -219,7 +225,7 @@ scene4NoBtn.addEventListener("click",()=>{
   noCount++;
   const phrase = phrases[Math.min(noCount, phrases.length-1)];
   noQuestion.textContent = phrase;
-  // Grow Yes button width, height, font
+  // Grow Yes button
   const style = window.getComputedStyle(scene4YesBtn);
   scene4YesBtn.style.width = (parseFloat(style.width)+20)+"px";
   scene4YesBtn.style.height = (parseFloat(style.height)+10)+"px";
@@ -237,29 +243,18 @@ const musicBtn=document.getElementById("musicToggle");
 const bgMusic=document.getElementById("bgMusic");
 let playing=false;
 
-function startMusic(){
-  if(!playing){
-    bgMusic.volume = 0;
-    bgMusic.play().catch(()=>{}); // autoplay may fail
-    let v=0;
-    const fade = setInterval(()=>{
-      v += 0.05;
-      bgMusic.volume = Math.min(v,0.5);
-      if(v>=0.5) clearInterval(fade);
-    },100);
-    musicBtn.textContent = "🔇 Stop Music";
-    playing = true;
-  }
-}
-
-/* Toggle music */
 musicBtn.addEventListener("click",()=>{
-  if(!playing){ bgMusic.play(); musicBtn.textContent="🔇 Stop Music"; }
-  else { bgMusic.pause(); musicBtn.textContent="🎵 Play Music"; }
+  if(!playing){ 
+    bgMusic.play(); 
+    musicBtn.textContent="🔇 Stop Music"; 
+  } else { 
+    bgMusic.pause(); 
+    musicBtn.textContent="🎵 Play Music"; 
+  }
   playing = !playing;
 });
 
-/* Final yes from scene 3 */
+/* Scene 3 Yes button goes to Scene 4 */
 function yesFinal(){ go(4); explode(); }
 
 /* Heart explosion */
@@ -283,10 +278,6 @@ setInterval(()=>{
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),12000);
 },500);
-
-/* Start music on first user interaction (guaranteed) */
-document.body.addEventListener("click",{once:true}, startMusic);
-document.body.addEventListener("touchstart",{once:true}, startMusic);
 </script>
 
 </body>
