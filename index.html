@@ -11,9 +11,7 @@
   --card:#ffffffee;
   --dark:#2f2f2f;
 }
-
 *{box-sizing:border-box;font-family:'Poppins',system-ui;margin:0;padding:0;}
-
 body{
   min-height:100vh;
   overflow-x:hidden;
@@ -24,7 +22,6 @@ body{
   color:var(--dark);
   padding:10px;
 }
-
 .app{
   width:100%;
   max-width:440px;
@@ -36,17 +33,14 @@ body{
   position:relative;
   z-index:2;
 }
-
 .scene{display:none;animation:fade .6s ease}
 .scene.active{display:block}
 @keyframes fade{
   from{opacity:0;transform:translateY(25px)}
   to{opacity:1;transform:none}
 }
-
 h1{margin-top:0;font-size:1.6rem;}
 p{line-height:1.6;font-size:1rem;}
-
 .btn{
   background:#ff4f7b;
   color:#fff;
@@ -59,10 +53,8 @@ p{line-height:1.6;font-size:1rem;}
   transition:.25s;
   min-width:80px;
 }
-
 .btn:hover{transform:scale(1.07)}
 .btn.alt{background:#eee;color:#555}
-
 .bar{
   width:100%;
   height:14px;
@@ -78,7 +70,6 @@ p{line-height:1.6;font-size:1rem;}
   background:linear-gradient(90deg,#ff4f7b,#ff9aa2);
   transition:width .6s ease;
 }
-
 .heart{
   position:absolute;
   font-size:18px;
@@ -89,7 +80,6 @@ p{line-height:1.6;font-size:1rem;}
   from{transform:translateY(110vh)}
   to{transform:translateY(-10vh)}
 }
-
 .final{
   animation:pulse .6s infinite alternate;
 }
@@ -100,7 +90,6 @@ p{line-height:1.6;font-size:1rem;}
   margin:12px 0;
   height:auto;
 }
-
 .music-controls{
   margin-top:15px;
 }
@@ -108,7 +97,6 @@ p{line-height:1.6;font-size:1rem;}
   width:100%;
   font-size:1rem;
 }
-
 @media (max-width:480px){
   h1{font-size:1.3rem;}
   p{font-size:0.95rem;}
@@ -141,14 +129,14 @@ p{line-height:1.6;font-size:1rem;}
   <div class="scene" id="s3">
     <h1>One last question…</h1>
     <p>Choose wisely 👀</p>
-    <button class="btn" onclick="go(4)">Yes, always 💝</button>
+    <button class="btn" id="scene3YesBtn">Yes, always 💝</button>
     <button class="btn alt" id="noBtn">No</button>
   </div>
 
   <!-- SCENE 4 -->
   <div class="scene" id="s4">
     <h1>WILL YOU BE MY VALENTINE?????</h1>
-    <button class="btn" onclick="go(4)">Yes 💕</button>
+    <button class="btn" id="scene4YesBtn">Yes 💕</button>
     <button class="btn alt" id="scene4NoBtn">No 😢</button>
     <p id="noQuestion" style="margin-top:15px;font-size:16px;"></p>
   </div>
@@ -185,7 +173,7 @@ function go(n){
   document.getElementById('s'+n).classList.add('active');
 }
 
-/* Wrong answer alert */
+/* Wrong answer */
 function wrong(){ alert("That option doesn’t exist 😌"); }
 
 /* Love meter */
@@ -208,8 +196,12 @@ noBtn.addEventListener("mouseenter",()=>{
   noBtn.style.top=Math.random()*70+"%";
 });
 
-/* Scene 4 No button logic with growing Yes button */
-let noCount = 0;
+/* Scene 3 Yes → Scene 4 */
+const scene3YesBtn = document.getElementById("scene3YesBtn");
+scene3YesBtn.addEventListener("click",()=> go(4));
+
+/* Scene 4 No button logic */
+let noCount=0;
 const scene4NoBtn = document.getElementById("scene4NoBtn");
 const scene4YesBtn = document.getElementById("scene4YesBtn");
 const noQuestion = document.getElementById("noQuestion");
@@ -220,27 +212,50 @@ const phrases = [
   "Don't be so cold!","Change of heart?","Wouldn't you reconsider?",
   "Is that your final answer?","You're breaking my heart ;(","Plsss? :( You're breaking my heart"
 ];
-
 scene4NoBtn.addEventListener("click",()=>{
   noCount++;
   const phrase = phrases[Math.min(noCount, phrases.length-1)];
   noQuestion.textContent = phrase;
-  // Grow Yes button
   const style = window.getComputedStyle(scene4YesBtn);
   scene4YesBtn.style.width = (parseFloat(style.width)+20)+"px";
   scene4YesBtn.style.height = (parseFloat(style.height)+10)+"px";
   scene4YesBtn.style.fontSize = (parseFloat(style.fontSize)+2)+"px";
 });
 
-/* Scene 4 Yes button goes to Scene 5 */
-function yesFinal(){ go(5); explode(); }
+/* Scene 4 Yes → Scene 5 */
+scene4YesBtn.addEventListener("click",()=>{
+  go(5);
+  explode();
 });
 
-/* Music logic */
+/* Music logic with autoplay attempt */
 const musicBtn=document.getElementById("musicToggle");
 const bgMusic=document.getElementById("bgMusic");
 let playing=false;
 
+// Autoplay attempt
+bgMusic.volume=0;
+bgMusic.play().then(()=>{
+  let v=0;
+  const fade = setInterval(()=>{
+    v+=0.01;
+    bgMusic.volume = Math.min(v,0.5);
+    if(v>=0.5) clearInterval(fade);
+  },100);
+}).catch(()=>{
+  // If blocked, play on first click/tap
+  document.body.addEventListener("click",{once:true},()=>{
+    bgMusic.play();
+    let v=0;
+    const fade = setInterval(()=>{
+      v+=0.01;
+      bgMusic.volume = Math.min(v,0.5);
+      if(v>=0.5) clearInterval(fade);
+    },100);
+  });
+});
+
+// Toggle music button
 musicBtn.addEventListener("click",()=>{
   if(!playing){ 
     bgMusic.play(); 
@@ -251,9 +266,6 @@ musicBtn.addEventListener("click",()=>{
   }
   playing = !playing;
 });
-
-/* Scene 3 Yes button goes to Scene 4 */
-function yesFinal(){ go(4); explode(); }
 
 /* Heart explosion */
 function explode(){
