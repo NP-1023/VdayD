@@ -228,39 +228,28 @@ scene4YesBtn.addEventListener("click",()=>{
   explode();
 });
 
-/* Music logic with autoplay attempt */
+/* Music logic: play on first interaction or toggle button */
 const musicBtn=document.getElementById("musicToggle");
 const bgMusic=document.getElementById("bgMusic");
 let playing=false;
 
-// Autoplay attempt
-bgMusic.volume=0;
-bgMusic.play().then(()=>{
-  let v=0;
-  const fade = setInterval(()=>{
-    v+=0.01;
-    bgMusic.volume = Math.min(v,0.5);
-    if(v>=0.5) clearInterval(fade);
-  },100);
-}).catch(()=>{
-  // If blocked, play on first click/tap
-  document.body.addEventListener("click",{once:true},()=>{
-    bgMusic.play();
-    let v=0;
-    const fade = setInterval(()=>{
-      v+=0.01;
-      bgMusic.volume = Math.min(v,0.5);
-      if(v>=0.5) clearInterval(fade);
-    },100);
-  });
-});
+function startMusic() {
+  bgMusic.volume=0.5;
+  bgMusic.play();
+  playing=true;
+  musicBtn.textContent="🔇 Stop Music";
+  document.body.removeEventListener("click", startMusic);
+}
 
-// Toggle music button
+// Play music on first click/tap anywhere
+document.body.addEventListener("click", startMusic, { once: true });
+
+// Toggle button
 musicBtn.addEventListener("click",()=>{
-  if(!playing){ 
+  if(!playing){
     bgMusic.play(); 
     musicBtn.textContent="🔇 Stop Music"; 
-  } else { 
+  } else {
     bgMusic.pause(); 
     musicBtn.textContent="🎵 Play Music"; 
   }
